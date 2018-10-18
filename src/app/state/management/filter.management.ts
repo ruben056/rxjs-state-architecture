@@ -5,7 +5,7 @@ import { Action } from '../model/app';
 import { VisibilityState, SetVisibilityFilter } from '../model/visibility';
 
 function filter(initState: VisibilityState, actions: Observable<Action>): Observable<VisibilityState> {
-
+  //todo probably replace with switch case... iso if else...
   return actions.pipe(
     scan((state: VisibilityState,action: Action)=>{
       if (action instanceof SetVisibilityFilter) {
