@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { AppState, Action } from '../model/app';
 import { TodoState, ToggleTodoAction, AddTodoAction, UpdateTodoAction, Todo } from '../model/todos';
 import { VisibilityState, SetVisibilityFilter } from '../model/visibility';
-import {  stateFn, todos } from './state.management';
+import {  stateFn, todos } from './app.management';
 
 describe('todos', () => {
 
@@ -76,6 +76,35 @@ describe('todos', () => {
       expect(todos.length).toEqual(1);
       expect(todos[0]).toEqual({
         id: 150, text: 'do something asap', completed: true});
+    });
+    mySubscription.unsubscribe();
+  }));
+
+  it('should add and toggle todo', inject([actionDispatcher, state], (actionDispatcher, state) => {
+
+    state.subscribe((updatedState)=>console.log('STATECHANGE:', JSON.stringify(updatedState)));
+    actionDispatcher.next(new AddTodoAction(150, 'do something asap'));
+    let mySubscription = state.subscribe((updatedState) => {
+      const todos = updatedState.todos.todos;
+      expect(todos.length).toEqual(1);
+      expect(todos[0]).toEqual({
+        id: 150, text: 'do something asap', completed: false});
+    });
+    mySubscription.unsubscribe();
+
+    actionDispatcher.next(new ToggleTodoAction(150));
+    mySubscription = state.subscribe((updatedState) => {
+      const todos = updatedState.todos.todos;
+      expect(todos.length).toEqual(1);
+      expect(todos[0].completed).toEqual(true);
+    });
+    mySubscription.unsubscribe();
+
+    actionDispatcher.next(new ToggleTodoAction(150));
+    mySubscription = state.subscribe((updatedState) => {
+      const todos = updatedState.todos.todos;
+      expect(todos.length).toEqual(1);
+      expect(todos[0].completed).toEqual(false);
     });
     mySubscription.unsubscribe();
   }));
