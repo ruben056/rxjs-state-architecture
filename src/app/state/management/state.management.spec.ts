@@ -1,16 +1,23 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { InjectionToken } from '@angular/core';
 import { Subject } from 'rxjs';
-import { VisibilityState, SetVisibilityFilter } from '../model/visibility';
-import { AppState, Action } from '../model/model';
+
+import { AppState, Action } from '../model/app';
 import { TodoState, ToggleTodoAction, AddTodoAction, UpdateTodoAction, Todo } from '../model/todos';
+import { VisibilityState, SetVisibilityFilter } from '../model/visibility';
 import {  stateFn, todos } from './state.management';
 
 describe('todos', () => {
+
+  const initState = new InjectionToken('initState');
+  const actionDispatcher = new InjectionToken('actionDispatcher');
+  const state = new InjectionToken('state');
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
       {
-        provide: 'initState',
+        provide: initState,
         useValue: {
         todos: {
           todos: new Array<Todo>()} as TodoState,
@@ -18,17 +25,16 @@ describe('todos', () => {
         } as AppState
       },
       {
-        provide: 'actionDispatcher',
+        provide: actionDispatcher,
         useValue: new Subject<Action>()
       },
       {
-        provide: 'state',
+        provide: state,
         useFactory: stateFn,
-        deps: ['initState', 'actionDispatcher']
+        deps: [initState, actionDispatcher]
     }]
-
-    });
   });
+});
 
   it('should create a new todo', () => {
     const actionDispatcher = new Subject<Action>();
@@ -52,7 +58,7 @@ describe('todos', () => {
     });
   });
 
-  it('should created and update todo', inject(['actionDispatcher', 'state'], (actionDispatcher: 'actionDispatcher', state: 'state') => {
+  it('should created and update todo', inject([actionDispatcher, state], (actionDispatcher, state) => {
 
     state.subscribe((updatedState)=>console.log('STATECHANGE:', JSON.stringify(updatedState)));
     actionDispatcher.next(new AddTodoAction(150, 'do something asap'));

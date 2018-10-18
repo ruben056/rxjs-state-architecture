@@ -1,8 +1,8 @@
-import { VisibilityState, SetVisibilityFilter } from '../model/visibility';
-import { AppState, Action } from '../model/model';
-import { TodoState, ToggleTodoAction, AddTodoAction, UpdateTodoAction } from '../model/todos';
 import { BehaviorSubject, Observable, merge, zip } from 'rxjs';
 import { scan, map } from 'rxjs/operators';
+import { AppState, Action } from '../model/app';
+import { TodoState, ToggleTodoAction, AddTodoAction, UpdateTodoAction } from '../model/todos';
+import { VisibilityState, SetVisibilityFilter } from '../model/visibility';
 
 function todos(initState: TodoState, actions: Observable<Action>): Observable<TodoState> {
     return actions.pipe(
