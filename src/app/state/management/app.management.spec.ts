@@ -60,7 +60,7 @@ describe('todos', () => {
 
   it('should created and update todo', inject([actionDispatcher, state], (actionDispatcher, state) => {
 
-    state.subscribe((updatedState)=>console.log('STATECHANGE:', JSON.stringify(updatedState)));
+    state.subscribe((updatedState) => console.log('STATECHANGE:', JSON.stringify(updatedState)));
     actionDispatcher.next(new AddTodoAction(150, 'do something asap'));
     let mySubscription = state.subscribe((updatedState) => {
       const todos = updatedState.todos.todos;

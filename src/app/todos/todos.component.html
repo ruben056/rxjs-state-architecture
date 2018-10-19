@@ -1,0 +1,14 @@
+<p>
+  Praktische uitwerking van idee : zie <a href="https://vsavkin.com/managing-state-in-angular-2-applications-caf78d123d02">hier</a> voor theorie
+</p>
+
+<div *ngIf="(appState$ | async).todos as todoState; else loading">
+  <ul>
+    <li *ngFor="let todo of todoState.todos" value="todo.text">{{todo.id + ":" + todo.text}} {{(todo.completed) ? '(v)' : '(x)'}}</li>
+  </ul>
+  <input #todoInput type="text" (change)="addTodo(todoState.todos[todoState.todos.length-1].id, todoInput.value)"/>
+</div>
+
+<ng-template #loading>
+  Loading stuff...
+</ng-template>
